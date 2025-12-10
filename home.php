@@ -4,73 +4,73 @@ include 'config.php';
 
 // Redirect to login if user not logged in
 if (!isset($_SESSION['user_id'])) {
-    header("Location: index.php");
-    exit;
+	header("Location: index.php");
+	exit;
 }
 
 $logged_user_id = $_SESSION['user_id'];
 
 function render_post($p,$username) {
-    echo <<<HTML
+	echo <<<HTML
 <div class="post-box">
-    <div class="post-header">
-        <img src="./images/mark.jpg" alt="">
-        <div class="post-details">
-            <a href="">{$username}</a>
-            <img src="./images/blue.svg" alt="" class="posts-icon">
-            <p><b>{$p['posting_date']}</b></p>
-        </div>
-        <div class="three-dots">
-            <img src="./images/dots.svg" alt="">
-        </div>
-    </div>
-    <div class="middle-content">
-        <p>{$p['post']}</p>
-    </div>
-    <div class="footer">
-        <div class="footer-content">
-            <div class="emojis">
-                <img src="./images/like.svg" alt="">
-                <img src="./images/heart.svg" alt="">
-                <img src="./images/smile.svg" alt="">
-                <span>125k</span>
-            </div>
-            <div>
-                <span>47.8k</span>
-                <span class="message"><i class="fa-solid fa-comment"></i></span>
-                <span>13k</span>
-                <span class="share"><i class="fa-solid fa-share"></i></span>
-            </div>
-        </div>
-        <div class="user-options">
-            <div class="mains">
-                <span><img src="./images/postlike.png" alt=""></span>
-                <div class="content"><a>Like</a></div>
-            </div>
-        </div>
-        <div class="user-options">
-            <div class="mains">
-                <span><img src="./images/comment.png" alt=""></span>
-                <div class="content"><a>Comment</a></div>
-            </div>
-        </div>
-        <div class="user-options">
-            <div class="mains">
-                <span><img src="./images/postshare.png" alt=""></span>
-                <div class="content"><a>Share</a></div>
-            </div>
-        </div>
-    </div>
+	<div class="post-header">
+		<img src="./images/mark.jpg" alt="">
+		<div class="post-details">
+			<a href="">{$username}</a>
+			<img src="./images/blue.svg" alt="" class="posts-icon">
+			<p><b>{$p['posting_date']}</b></p>
+		</div>
+		<div class="three-dots">
+			<img src="./images/dots.svg" alt="">
+		</div>
+	</div>
+	<div class="middle-content">
+		<p>{$p['post']}</p>
+	</div>
+	<div class="footer">
+		<div class="footer-content">
+			<div class="emojis">
+				<img src="./images/like.svg" alt="">
+				<img src="./images/heart.svg" alt="">
+				<img src="./images/smile.svg" alt="">
+				<span>125k</span>
+			</div>
+			<div>
+				<span>47.8k</span>
+				<span class="message"><i class="fa-solid fa-comment"></i></span>
+				<span>13k</span>
+				<span class="share"><i class="fa-solid fa-share"></i></span>
+			</div>
+		</div>
+		<div class="user-options">
+			<div class="mains">
+				<span><img src="./images/postlike.png" alt=""></span>
+				<div class="content"><a>Like</a></div>
+			</div>
+		</div>
+		<div class="user-options">
+			<div class="mains">
+				<span><img src="./images/comment.png" alt=""></span>
+				<div class="content"><a>Comment</a></div>
+			</div>
+		</div>
+		<div class="user-options">
+			<div class="mains">
+				<span><img src="./images/postshare.png" alt=""></span>
+				<div class="content"><a>Share</a></div>
+			</div>
+		</div>
+	</div>
 </div>
 HTML;
 }
 
 // Handle adding new post
-            // if(isset($_POST['new_post']) && trim($_POST['new_post']) != ""){
-            //     $post = $conn->real_escape_string(trim($_POST['new_post']));
-            //     $sql = "INSERT INTO tWall(user_id, posting_date, post) VALUES($logged_user_id, NOW(), '$post')";
-            //     $conn->query($sql);
-            // }
+			// if(isset($_POST['new_post']) && trim($_POST['new_post']) != ""){
+			//     $post = $conn->real_escape_string(trim($_POST['new_post']));
+			//     $sql = "INSERT INTO tWall(user_id, posting_date, post) VALUES($logged_user_id, NOW(), '$post')";
+			//     $conn->query($sql);
+			// }
 
 // Determine which user's posts to show
 $view_uid = $logged_user_id; // default: logged-in user
@@ -78,7 +78,7 @@ $view_uid = $logged_user_id; // default: logged-in user
 
 
 if(isset($_POST['view_friend_id'])){
-    $view_uid = intval($_POST['view_friend_id']);
+	$view_uid = intval($_POST['view_friend_id']);
 }
 $view_user_sql = "SELECT Name FROM tUser WHERE user_id=$view_uid";
 $view_user_res = $conn->query($view_user_sql);
@@ -96,229 +96,230 @@ $user_res = $conn->query($user_sql);
 $user = $user_res->fetch_assoc();
 
 // Fetch friends list
-$friends_sql = "SELECT user_id, Name, profile_img FROM tUser WHERE user_id in(select friend_id from tFriends where user_id= $logged_user_id)";
+$friends_sql = "SELECT user_id, Name, image_path FROM tUser WHERE user_id in(select friend_id from tFriends where user_id= $logged_user_id)";
 $friends = $conn->query($friends_sql);
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>facebook</title>
-    <link rel="icon" type="image/png" href="./images/facebooklogo.png">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="home.css">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>facebook</title>
+	<link rel="icon" type="image/png" href="./images/facebooklogo.png">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+	<link rel="stylesheet" href="home.css">
 </head>
 <body>
-    <div class="first-half">
+	<div class="first-half">
 
-        <!-- HEADER -->
-        <div class="main-header">
-            <div class="logo-details">
-                <div class="search">
-                    <img src="./images/logo.svg" alt="" class="logo">
-                    <input type="text" class="fb-search" placeholder="Search Facebook">
-                </div>
-                <div class="middle">
-                    <span class="tabs-right edit_styles"><img src="./images/home.svg" alt=""></span>
-                    <span class="edit edit_styles"><img src="./images/insta.svg" alt=""></span>
-                    <span class="tabs-right edit_styles"><img src="./images/market.svg" alt=""></span>
-                    <span class="edits edit_styles"><img src="./images/friends.svg" alt=""></span>
-                    <span class="games edit_styles"><img src="./images/gaming.svg" alt=""></span>
-                </div>
-                <div class="profile-details">
-                    <span class="end"><img src="./images/menu.svg" alt=""></span>
-                    <span class="end"><img src="./images/message.svg" alt=""></span>
-                    <span class="end"><img src="./images/noti.svg" alt=""></span>
-                    <span class="profiles profile-wrapper">
-                        <img src="./images/village.jpg" class="right-icons profile-icon" height="40" width="40">
-                        <img src="./images/drop.svg" class="drop-icon">
-                        <ul class="dropdown-menu-profile">
-                            <li><a href="profile.php?uid=<?= $logged_user_id ?>">Profile</a></li>
-                            <li><a href="logout.php">Logout</a></li>
-                        </ul>
-                    </span>
-                </div>
-            </div>
-        </div>
+		<!-- HEADER -->
+		<div class="main-header">
+			<div class="logo-details">
+				<div class="search">
+					<img src="./images/logo.svg" alt="" class="logo">
+					<input type="text" class="fb-search" placeholder="Search Facebook">
+				</div>
+				<div class="middle">
+					<span class="tabs-right edit_styles"><img src="./images/home.svg" alt=""></span>
+					<span class="edit edit_styles"><img src="./images/insta.svg" alt=""></span>
+					<span class="tabs-right edit_styles"><img src="./images/market.svg" alt=""></span>
+					<span class="edits edit_styles"><img src="./images/friends.svg" alt=""></span>
+					<span class="games edit_styles"><img src="./images/gaming.svg" alt=""></span>
+				</div>
+				<div class="profile-details">
+					<span class="end"><img src="./images/menu.svg" alt=""></span>
+					<span class="end"><img src="./images/message.svg" alt=""></span>
+					<span class="end"><img src="./images/noti.svg" alt=""></span>
+					<span class="profiles profile-wrapper">
+						<img src="./images/village.jpg" class="right-icons profile-icon" height="40" width="40">
+						<img src="./images/drop.svg" class="drop-icon">
+						<ul class="dropdown-menu-profile">
+							<li><a href="profile.php?uid=<?= $logged_user_id ?>">Profile</a></li>
+							<li><a href="logout.php">Logout</a></li>
+						</ul>
+					</span>
+				</div>
+			</div>
+		</div>
 
-        <!-- PROFILE BANNER -->
-        <div class="body">
-            <div class="body-header">
-                <img src="./images/main.png" alt="" class="profile">
-            </div>
-        </div>
+		<!-- PROFILE BANNER -->
+		<div class="body">
+			<div class="body-header">
+				<img src="./images/main.png" alt="" class="profile">
+			</div>
+		</div>
 
-        <!-- MAIN SECTION -->
-        <div class="row main">
-            <div class="col-lg-2">
-                <img src="./images/mark.jpg" alt="" class="mark-image">
-            </div>
-            <div class="col-lg-10 user-section">
-                <div class="top-row">
-                    <div>
-                        <a href="#" class="user-name">
-                            Mark Zuckerberg
-                        </a>
-                        <img src="./images/blue.svg" alt="" class="verify-icon">
-                        <br>
-                        <div class="follow">
-                        <a href="#" class="followers">120M followers</a>
-                        </div>
-                    </div>
-                    <div class="buttons">
-                        <button class="btn follow-btn">
-                            <img src="https://static.xx.fbcdn.net/rsrc.php/v4/yw/r/LJ8KuNpi23A.png" class="icon-white">
-                            Follow
-                        </button>
-                        <button class="btn search-btn">
-                            <img src="./images/search.svg" class="icon-black" height="18px" width="18px">
-                            Search
-                        </button>
-                    </div>
-                </div>
+		<!-- MAIN SECTION -->
+		<div class="row main">
+			<div class="col-lg-2">
+				<img src="./images/mark.jpg" alt="" class="mark-image">
+			</div>
+			<div class="col-lg-10 user-section">
+				<div class="top-row">
+					<div>
+						<a href="#" class="user-name">
+							Mark Zuckerberg
+						</a>
+						<img src="./images/blue.svg" alt="" class="verify-icon">
+						<br>
+						<div class="follow">
+						<a href="#" class="followers">120M followers</a>
+						</div>
+					</div>
+					<div class="buttons">
+						<button class="btn follow-btn">
+							<img src="https://static.xx.fbcdn.net/rsrc.php/v4/yw/r/LJ8KuNpi23A.png" class="icon-white">
+							Follow
+						</button>
+						<button class="btn search-btn">
+							<img src="./images/search.svg" class="icon-black" height="18px" width="18px">
+							Search
+						</button>
+					</div>
+				</div>
 
-                <div class="user-info">
-                    <p class="desc">Bringing the world closer together.</p>
-                    <p class="info-line">
-                        <img src="./images/public.svg" class="info-icon">
-                        <a href="#">Public figure</a>
-                        <span class="dots">.</span>
-                        <img src="./images/location.svg" class="info-icon icons">
-                        <a href="#">Palo Alto, California</a>
-                        <span class="dots">.</span>
-                        <img src="./images/meta.svg" class="info-icon">
-                        <a href="#">Meta</a>
-                        <span class="dots">.</span>
-                        <img src="./images/meta.svg" class="info-icon dates">
-                        <a href="#">Biohub</a>
-                        <span class="dots">.</span>
-                        <img src="./images/education.svg" class="info-icon last">
-                        <a href="#">Harvard University</a>
-                    </p>
-                    <p class="followers">
-                        <img src="./images/followings.png" class="followers-img" alt="">
-                    </p>
-                </div>
-            </div>
-        </div>
+				<div class="user-info">
+					<p class="desc">Bringing the world closer together.</p>
+					<p class="info-line">
+						<img src="./images/public.svg" class="info-icon">
+						<a href="#">Public figure</a>
+						<span class="dots">.</span>
+						<img src="./images/location.svg" class="info-icon icons">
+						<a href="#">Palo Alto, California</a>
+						<span class="dots">.</span>
+						<img src="./images/meta.svg" class="info-icon">
+						<a href="#">Meta</a>
+						<span class="dots">.</span>
+						<img src="./images/meta.svg" class="info-icon dates">
+						<a href="#">Biohub</a>
+						<span class="dots">.</span>
+						<img src="./images/education.svg" class="info-icon last">
+						<a href="#">Harvard University</a>
+					</p>
+					<p class="followers">
+						<img src="./images/followings.png" class="followers-img" alt="">
+					</p>
+				</div>
+			</div>
+		</div>
 
-        <!-- BODY TABS -->
-        <div class="body-tabs">
-            <ul class="nav nav-tabs">
-                <li class="active">All</li>
-                <li>About</li>
-                <li>Photos</li>
-                <li class="close1">Friends</li>
-                <li class="close1">Reels</li>
-                <li>More <span class="caret more-icon"></span></li>
-            </ul>
-        </div>
+		<!-- BODY TABS -->
+		<div class="body-tabs">
+			<ul class="nav nav-tabs">
+				<li class="active">All</li>
+				<li>About</li>
+				<li>Photos</li>
+				<li class="close1">Friends</li>
+				<li class="close1">Reels</li>
+				<li>More <span class="caret more-icon"></span></li>
+			</ul>
+		</div>
 
-    </div>
+	</div>
 
-    <div class="second-half">
-        <div class="layout">
-            <!-- LEFT SIDE -->
-            <div class="left-side">
-                <div class="details-box">
-                    <h3 class="section-title">Personal details</h3>
-                    <div class="detail-item"> <img src="../images/ploc.svg" class="detail-icon"> <span>Lives in Palo Alto, California</span> </div>
-                    <div class="detail-item"> <img src="../images/phome.svg" class="detail-icon"> <span>From Dobbs Ferry, New York</span> </div>
-                    <div class="detail-item"> <img src="../images/pdob.svg" class="detail-icon"> <span>14 May 1984</span> </div>
-                    <p class="see-more">See more personal details</p>
-                    <h3 class="section-title">Communities</h3>
-                    <div class="detail-item"> <img src="../images/pmeta.svg" class="detail-icon"> <span>Meta Channel · 799K members</span> </div>
-                    <p class="see-more">See more communities</p>
-                    <h3 class="section-title">Work</h3>
-                    <div class="detail-item"> <img src="./images/work.jpg" class="detail-icon"> <span>Meta — Founder and CEO</span> </div>
-                    <p class="sub">4 Feb 2004 – Present · 21 years, 9 months</p>
-                    <p class="see-more">See more work</p>
-                    <h3 class="section-title">Education</h3>
-                    <div class="detail-item"> <img src="./images/harvard.jpg" class="detail-icon"> <span>Harvard University</span> </div>
-                    <p class="sub">30 August 2002 – 30 April 2004</p>
-                    <p class="see-more">See more education</p>
-                </div>
+	<div class="second-half">
+		<div class="layout">
+			<!-- LEFT SIDE -->
+			<div class="left-side">
+				<div class="details-box">
+					<h3 class="section-title">Personal details</h3>
+					<div class="detail-item"> <img src="../images/ploc.svg" class="detail-icon"> <span>Lives in Palo Alto, California</span> </div>
+					<div class="detail-item"> <img src="../images/phome.svg" class="detail-icon"> <span>From Dobbs Ferry, New York</span> </div>
+					<div class="detail-item"> <img src="../images/pdob.svg" class="detail-icon"> <span>14 May 1984</span> </div>
+					<p class="see-more">See more personal details</p>
+					<h3 class="section-title">Communities</h3>
+					<div class="detail-item"> <img src="../images/pmeta.svg" class="detail-icon"> <span>Meta Channel · 799K members</span> </div>
+					<p class="see-more">See more communities</p>
+					<h3 class="section-title">Work</h3>
+					<div class="detail-item"> <img src="./images/work.jpg" class="detail-icon"> <span>Meta — Founder and CEO</span> </div>
+					<p class="sub">4 Feb 2004 – Present · 21 years, 9 months</p>
+					<p class="see-more">See more work</p>
+					<h3 class="section-title">Education</h3>
+					<div class="detail-item"> <img src="./images/harvard.jpg" class="detail-icon"> <span>Harvard University</span> </div>
+					<p class="sub">30 August 2002 – 30 April 2004</p>
+					<p class="see-more">See more education</p>
+				</div>
 
-                <!-- FRIENDS BOX -->
-                <div class="box friends">
-                    <h3 class="section-title" align="center">Friends</h3>
-                    <?php while ($f = $friends->fetch_assoc()) { ?>
-                        <form method="POST" style="display:inline-block;">
-                            <input type="hidden" name="view_friend_id" value="<?= $f['user_id'] ?>">
-                            <button type="submit" class="detail-item friend-link" style="border:none; background:none; cursor:pointer;">
-                                <img src="<?= $f['profile_img']; ?>" alt="profile" height="40" width="40">
-                                <span><b><?= $f['Name'] ?><b></span>
-                            </button>
-                        </form>
-                    <?php } ?>
-                </div>
-            </div>
+				<!-- FRIENDS BOX -->
+				<div class="box friends">
+					<h3 class="section-title" align="center">Friends</h3>
+					<?php while ($f = $friends->fetch_assoc()) { ?>
+						<form method="POST" style="display:inline-block;">
+							<input type="hidden" name="view_friend_id" value="<?= $f['user_id'] ?>">
+							<button type="submit" class="detail-item friend-link" style="border:none; background:none; cursor:pointer;">
+								<img src="<?= $f['image_path']; ?>" alt="profile" height="40" width="40">
+								<span><b><?= $f['Name'] ?><b></span>
+							</button>
+						</form>
+					<?php } ?>
+				</div>
+			</div>
 
-            <!-- RIGHT SIDE -->
-            <div class="right-side">
-                <!-- POSTS HEADER -->
-                <div class="post-box">
-                    <h3 class="section-title post-title" align="center">Posts</h3>
-                </div>
+			<!-- RIGHT SIDE -->
+			<div class="right-side">
+				<!-- POSTS HEADER -->
+				<div class="post-box">
+					<h3 class="section-title post-title" align="center">Posts</h3>
+				</div>
 
-                <!-- ADD NEW POST -->
-                <div class="post-box">
-                    <form method="POST" id="postForm">
-                        <textarea name="new_post" rows="3" cols="52" placeholder="Write something..."></textarea><br>
-                        <button type="submit" onclick="">Add Post</button>
-                    </form>
-                </div>
+				<!-- ADD NEW POST -->
+				<div class="post-box">
+					<form id="postForm">
+						<textarea name="new_post" rows="3" placeholder="Write something..."></textarea><br>
+						<button type="submit">Add Post</button>
+						<span id="post_error" style="color:red; font-size:14px;"></span>
+					</form>
+				</div>
 
-                <!-- DISPLAY POSTS -->
-                <div id="wallPosts">
-                    <?php while ($p = $all_posts->fetch_assoc()) { render_post($p, $view_user_name); } ?>
-                </div>
-            </div>
-        </div>
-    </div>
+				<!-- DISPLAY POSTS -->
+				<div id="wallPosts">
+					<?php while ($p = $all_posts->fetch_assoc()) { render_post($p, $view_user_name); } ?>
+				</div>
+			</div>
+		</div>
+	</div>
 
-    <script>
-    // Profile dropdown toggle
-    document.querySelector('.drop-icon').addEventListener('click', function() {
-        let menu = document.querySelector('.dropdown-menu-profile');
-        menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
-    });
+	<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+	<script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
-    document.addEventListener('click', function(e){
-        if(!e.target.closest('.profile-wrapper')){
-            document.querySelector('.dropdown-menu-profile').style.display = 'none';
+	<script>
+	// Profile dropdown toggle
+	document.querySelector('.drop-icon').addEventListener('click', function() {
+		let menu = document.querySelector('.dropdown-menu-profile');
+		menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+	});
+
+	document.addEventListener('click', function(e){
+		if(!e.target.closest('.profile-wrapper')){
+			document.querySelector('.dropdown-menu-profile').style.display = 'none';
+		}
+	});
+
+	$(document).ready(function() {
+    $("#postForm").submit(function(e) {
+        e.preventDefault(); // prevent default form submission
+
+        var postText = $("textarea[name='new_post']").val().trim();
+        if (postText === "") {
+            $("#post_error").text("Post cannot be empty!");
+            return;
         }
+
+        $.post("add_post.php", { new_post: postText }, function(data) {
+            if (data.includes("success")) {
+                // Clear textarea
+                $("textarea[name='new_post']").val("");
+
+                // Reload posts
+                $("#wallPosts").load("load_posts.php");
+            } else {
+                $("#post_error").text("Failed to add post. Try again!");
+            }
+        });
     });
+});
+	</script>
 
-    document.querySelector("#postForm").onsubmit = function(e) {
-    e.preventDefault();
-
-    let formData = new FormData(this);
-
-    fetch("add_post.php", {
-        method: "POST",
-        body: formData
-    })
-    .then(r => r.json())
-    .then(res => {
-        if (res.status === "success") {
-            // Clear the textbox
-            document.querySelector("textarea[name='new_post']").value = "";
-
-            // Reload only the posts section (no page refresh)
-            fetch("load_posts.php")
-                .then(r => r.text())
-                .then(html => {
-                    document.getElementById("wallPosts").innerHTML = html;
-                });
-        } else {
-            // Show error message (optional)
-            console.error("Error:", res.message);
-        }
-    });
-};
-
-    </script>
 </body>
 </html>
