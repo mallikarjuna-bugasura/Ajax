@@ -113,34 +113,42 @@ $friends = $conn->query($friends_sql);
 	<div class="first-half">
 
 		<!-- HEADER -->
-		<div class="main-header">
-			<div class="logo-details">
-				<div class="search">
-					<img src="./images/logo.svg" alt="" class="logo">
-					<input type="text" class="fb-search" placeholder="Search Facebook">
-				</div>
-				<div class="middle">
-					<span class="tabs-right edit_styles"><img src="./images/home.svg" alt=""></span>
-					<span class="edit edit_styles"><img src="./images/insta.svg" alt=""></span>
-					<span class="tabs-right edit_styles"><img src="./images/market.svg" alt=""></span>
-					<span class="edits edit_styles"><img src="./images/friends.svg" alt=""></span>
-					<span class="games edit_styles"><img src="./images/gaming.svg" alt=""></span>
-				</div>
-				<div class="profile-details">
-					<span class="end"><img src="./images/menu.svg" alt=""></span>
-					<span class="end"><img src="./images/message.svg" alt=""></span>
-					<span class="end"><img src="./images/noti.svg" alt=""></span>
-					<span class="profiles profile-wrapper">
-						<img src="./images/village.jpg" class="right-icons profile-icon" height="40" width="40">
-						<img src="./images/drop.svg" class="drop-icon">
-						<ul class="dropdown-menu-profile">
-							<li><a href="profile.php?uid=<?= $logged_user_id ?>">Profile</a></li>
-							<li><a href="logout.php">Logout</a></li>
-						</ul>
-					</span>
-				</div>
-			</div>
+		<div class="logo-details">
+
+		<!-- Logo + search bar -->
+		<div class="search">
+			<img src="./images/logo.svg" alt="" class="logo">
+			<input type="text" class="fb-search" placeholder="Search Facebook">
 		</div>
+
+		<!-- Middle navigation icons -->
+		<div class="middle">
+			<span class="edit_styles"><img src="./images/home.svg" alt=""></span>
+			<span class="edit_styles middle-icons"><img src="./images/insta.svg" alt=""></span>
+			<span class="edit_styles middle-icons"><img src="./images/market.svg" alt=""></span>
+			<span class="edit_styles middle-last"><img src="./images/friends.svg" alt=""></span>
+			<span class="edit_styles middle-last"><img src="./images/gaming.svg" alt=""></span>
+		</div>
+
+		<!-- Right profile icons -->
+		<div class="profile-details">
+			<span class="end"><img src="./images/menu.svg" alt="" class="last"></span>
+			<span class="end"><img src="./images/message.svg" alt="" class="last"></span>
+			<span class="end"><img src="./images/noti.svg" alt="" class="last"></span>
+
+			<!-- Profile dropdown -->
+			<span class="profiles profile-wrapper end">
+				<img src="./images/village.jpg" class="right-icons profile-icon" height="40" width="40">
+				<img src="./images/drop.svg" class="drop-icon">
+				<!-- Dropdown menu -->
+				<ul class="dropdown-menu-profile">
+					<li><a href="profile.php?uid=<?= $logged_user_id ?>">Profile</a></li>
+					<li><a href="logout.php">Logout</a></li>
+				</ul>
+
+			</span>
+		</div>
+	</div>	
 
 		<!-- PROFILE BANNER -->
 		<div class="body">
@@ -265,9 +273,9 @@ $friends = $conn->query($friends_sql);
 				<!-- ADD NEW POST -->
 				<div class="post-box">
 					<form id="postForm">
-						<textarea name="new_post" rows="3" placeholder="Write something..."></textarea><br>
+						<textarea name="new_post" rows="3" placeholder="Write something..." style="width:100% ; border:none"></textarea><br>
 						<button type="submit">Add Post</button>
-						<span id="post_error" style="color:red; font-size:14px;"></span>
+						<span id="post_error"></span>
 					</form>
 				</div>
 
@@ -297,27 +305,45 @@ $friends = $conn->query($friends_sql);
 	});
 
 	$(document).ready(function() {
-    $("#postForm").submit(function(e) {
-        e.preventDefault(); // prevent default form submission
+	$("#postForm").submit(function(e) {
+		e.preventDefault(); // prevent default form submission
 
-        var postText = $("textarea[name='new_post']").val().trim();
-        if (postText === "") {
-            $("#post_error").text("Post cannot be empty!");
-            return;
-        }
+		var postText = $("textarea[name='new_post']").val().trim();
+		if (postText === "") {
+			$("#post_error").css({
+				"color":"red",
+				"font-size":"14px"
+			}).text("Post cannot be empty");
+			setTimeout(function() {
+				$("#post_error").fadeOut(500, function() {
+					$(this).text("").show(); // reset for next time
+				});
+			}, 2000);
+			return;
+		}
 
-        $.post("add_post.php", { new_post: postText }, function(data) {
-            if (data.includes("success")) {
-                // Clear textarea
-                $("textarea[name='new_post']").val("");
+		$.post("add_post.php", { new_post: postText }, function(data) {
+			if (data.includes("success")) {
+				// Clear textarea
+				$("textarea[name='new_post']").val("");
 
-                // Reload posts
-                $("#wallPosts").load("load_posts.php");
-            } else {
-                $("#post_error").text("Failed to add post. Try again!");
-            }
-        });
-    });
+				// Reload posts
+				$("#wallPosts").load("load_posts.php");
+				$("#post_error").css({
+					"color":"green",
+					"font-size":"14px"
+				}).text("Post added successfully")
+				setTimeout(function() {
+					$("#post_error").fadeOut(500, function() {
+						$(this).text("").show(); // reset for next time
+					});
+				}, 2000);
+				return;
+			} else {
+				$("#post_error").text("Failed to add post. Try again!");
+			}
+		});
+	});
 });
 	</script>
 
